@@ -21,16 +21,19 @@ const defaults: SignOptions = {
   audience: [Audience.User],
 };
 
+// Thiết lập thời gian hết hạn cho AccessToken (15 phút)
 const accessTokenSignOptions: SignOptionsAndSecret = {
-  expiresIn: "15m",
+  expiresIn: "30s", // AccessToken hết hạn sau 15 phút
   secret: JWT_SECRET,
 };
 
+// Thiết lập thời gian hết hạn cho RefreshToken (30 ngày)
 export const refreshTokenSignOptions: SignOptionsAndSecret = {
-  expiresIn: "30d",
+  expiresIn: "30d", // RefreshToken hết hạn sau 30 ngày
   secret: JWT_REFRESH_SECRET,
 };
 
+// Hàm ký token
 export const signToken = (
   payload: AccessTokenPayload | RefreshTokenPayload,
   options?: SignOptionsAndSecret
@@ -42,6 +45,7 @@ export const signToken = (
   });
 };
 
+// Hàm xác thực token
 export const verifyToken = <TPayload extends object = AccessTokenPayload>(
   token: string,
   options?: VerifyOptions & {
