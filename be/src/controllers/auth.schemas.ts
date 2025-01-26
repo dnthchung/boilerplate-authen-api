@@ -13,6 +13,7 @@ export const loginSchema = z.object({
 export const registerSchema = loginSchema
   .extend({
     confirmPassword: passwordSchema,
+    role: z.enum(["user", "seller"]), // Chỉ cho phép chọn "user" hoặc "seller"
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

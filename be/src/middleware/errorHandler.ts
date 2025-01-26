@@ -23,9 +23,15 @@ const handleAppError = (res: Response, error: AppError) => {
   });
 };
 
+//custom error handler
 const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
-  console.log(`PATH ${req.path}`, error);
-
+  // console.log(`PATH => ${req.path}`, error);
+  console.log(
+    `[PATH: ${req.path}] =>`,
+    `Error Message: ${error.message} =>`,
+    error.stack.split("\n")[1]
+  );
+  //result : PATH /user Not authorized at appAssert (D:\Workspace\Github_folder\boilerplate-authen-api\be\src\utils\appAssert.ts:20:24)
   if (req.path === REFRESH_PATH) {
     clearAuthCookies(res);
   }

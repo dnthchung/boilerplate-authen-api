@@ -1,0 +1,20 @@
+### Register - password is required and 6 characters long
+POST http://localhost:4004/auth/register
+Content-Type: application/json
+
+{
+  "email": "xichung1994@gmail.com",
+  "password": "111111",
+  "confirmPassword": "111111",
+  "role": "seller"
+}
+
+
+### Login - password is required and 6 characters long
+POST http://localhost:4004/auth/login
+Content-Type: application/json
+
+{
+  "email": "xichung1994@gmail.com",
+  "password": "111111"
+}

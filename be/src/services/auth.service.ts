@@ -2,7 +2,14 @@
 
 // 1. Constants
 import { APP_ORIGIN } from "../constants/env";
-import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, TOO_MANY_REQUESTS, UNAUTHORIZED, UNPROCESSABLE_CONTENT } from "../constants/http";
+import {
+  CONFLICT,
+  INTERNAL_SERVER_ERROR,
+  NOT_FOUND,
+  TOO_MANY_REQUESTS,
+  UNAUTHORIZED,
+  UNPROCESSABLE_CONTENT,
+} from "../constants/http";
 import VerificationCodeType from "../constants/verificationCodeType";
 
 // 2. Models
@@ -13,15 +20,30 @@ import VerificationCodeModel from "../models/verificationCode.model";
 // 3. Utils
 import appAssert from "../utils/appAssert";
 import { hashValue } from "../utils/bcrypt";
-import { ONE_DAY_MS, fiveMinutesAgo, oneHourFromNow, oneYearFromNow, thirtyDaysFromNow } from "../utils/date";
-import { getPasswordResetTemplate, getVerifyEmailTemplate } from "../utils/emailTemplates";
-import { RefreshTokenPayload, refreshTokenSignOptions, signToken, verifyToken } from "../utils/jwt";
+import {
+  ONE_DAY_MS,
+  fiveMinutesAgo,
+  oneHourFromNow,
+  oneYearFromNow,
+  thirtyDaysFromNow,
+} from "../utils/date";
+import {
+  getPasswordResetTemplate,
+  getVerifyEmailTemplate,
+} from "../utils/emailTemplates";
+import {
+  RefreshTokenPayload,
+  refreshTokenSignOptions,
+  signToken,
+  verifyToken,
+} from "../utils/jwt";
 import { sendMail } from "../utils/sendMail";
 
 // ==================== Types ====================
 type CreateAccountParams = {
   email: string;
   password: string;
+  role: "user" | "seller";
   userAgent?: string;
 };
 
@@ -50,6 +72,7 @@ export const createAccount = async (data: CreateAccountParams) => {
   const user = await UserModel.create({
     email: data.email,
     password: data.password,
+    role: data.role,
   });
 
   // Tạo mã xác thực email
@@ -74,7 +97,10 @@ export const createAccount = async (data: CreateAccountParams) => {
   });
 
   // Tạo token
-  const refreshToken = signToken({ sessionId: session._id }, refreshTokenSignOptions);
+  const refreshToken = signToken(
+    { sessionId: session._id },
+    refreshTokenSignOptions
+  );
   const accessToken = signToken({
     userId: user._id,
     sessionId: session._id,
@@ -90,7 +116,11 @@ export const createAccount = async (data: CreateAccountParams) => {
 /**
  * Đăng nhập người dùng bằng email và password, tạo session và trả về token.
  */
-export const loginUser = async ({ email, password, userAgent }: LoginParams) => {
+export const loginUser = async ({
+  email,
+  password,
+  userAgent,
+}: LoginParams) => {
   const user = await UserModel.findOne({ email });
   appAssert(user, UNAUTHORIZED, "Invalid email or password");
 
@@ -103,7 +133,10 @@ export const loginUser = async ({ email, password, userAgent }: LoginParams) => 
   });
 
   // Tạo token
-  const refreshToken = signToken({ sessionId: session._id }, refreshTokenSignOptions);
+  const refreshToken = signToken(
+    { sessionId: session._id },
+    refreshTokenSignOptions
+  );
   const accessToken = signToken({
     userId: user._id,
     sessionId: session._id,
@@ -127,7 +160,11 @@ export const verifyEmail = async (code: string) => {
   });
   appAssert(validCode, NOT_FOUND, "Invalid or expired verification code");
 
-  const updatedUser = await UserModel.findByIdAndUpdate(validCode.userId, { verified: true }, { new: true });
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    validCode.userId,
+    { verified: true },
+    { new: true }
+  );
   appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to verify email");
 
   await validCode.deleteOne();
@@ -148,7 +185,11 @@ export const refreshUserAccessToken = async (refreshToken: string) => {
 
   const session = await SessionModel.findById(payload.sessionId);
   const now = Date.now();
-  appAssert(session && session.expiresAt.getTime() > now, UNAUTHORIZED, "Session expired");
+  appAssert(
+    session && session.expiresAt.getTime() > now,
+    UNAUTHORIZED,
+    "Session expired"
+  );
 
   // Nếu session sắp hết hạn (< 24h), gia hạn thêm
   const sessionNeedsRefresh = session.expiresAt.getTime() - now <= ONE_DAY_MS;
@@ -158,7 +199,9 @@ export const refreshUserAccessToken = async (refreshToken: string) => {
   }
 
   // Nếu gia hạn session, cấp refresh token mới
-  const newRefreshToken = sessionNeedsRefresh ? signToken({ sessionId: session._id }, refreshTokenSignOptions) : undefined;
+  const newRefreshToken = sessionNeedsRefresh
+    ? signToken({ sessionId: session._id }, refreshTokenSignOptions)
+    : undefined;
 
   // Tạo access token mới
   const accessToken = signToken({
@@ -187,7 +230,11 @@ export const sendPasswordResetEmail = async (email: string) => {
       type: VerificationCodeType.PasswordReset,
       createdAt: { $gt: fiveMinAgoTime },
     });
-    appAssert(count <= 1, TOO_MANY_REQUESTS, "Too many requests, please try again later");
+    appAssert(
+      count <= 1,
+      TOO_MANY_REQUESTS,
+      "Too many requests, please try again later"
+    );
 
     // Tạo mã reset
     const expiresAt = oneHourFromNow();
@@ -197,13 +244,19 @@ export const sendPasswordResetEmail = async (email: string) => {
       expiresAt,
     });
 
-    const url = `${APP_ORIGIN}/password/reset?code=${verificationCode._id}&exp=${expiresAt.getTime()}`;
+    const url = `${APP_ORIGIN}/password/reset?code=${
+      verificationCode._id
+    }&exp=${expiresAt.getTime()}`;
     const { data, error } = await sendMail({
       to: email,
       ...getPasswordResetTemplate(url),
     });
 
-    appAssert(data?.id, INTERNAL_SERVER_ERROR, `${error?.name} - ${error?.message}`);
+    appAssert(
+      data?.id,
+      INTERNAL_SERVER_ERROR,
+      `${error?.name} - ${error?.message}`
+    );
     return {
       url,
       emailId: data.id,
@@ -218,7 +271,10 @@ export const sendPasswordResetEmail = async (email: string) => {
 /**
  * Đặt lại mật khẩu cho người dùng khi có mã xác thực hợp lệ.
  */
-export const resetPassword = async ({ verificationCode, password }: ResetPasswordParams) => {
+export const resetPassword = async ({
+  verificationCode,
+  password,
+}: ResetPasswordParams) => {
   const validCode = await VerificationCodeModel.findOne({
     _id: verificationCode,
     type: VerificationCodeType.PasswordReset,

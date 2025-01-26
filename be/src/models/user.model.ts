@@ -5,12 +5,13 @@ export interface UserDocument extends mongoose.Document {
   email: string;
   password: string;
   verified: boolean;
+  role: "admin" | "user" | "seller";
   createdAt: Date;
   updatedAt: Date;
   comparePassword(val: string): Promise<boolean>;
   omitPassword(): Pick<
     UserDocument,
-    "_id" | "email" | "verified" | "createdAt" | "updatedAt" | "__v"
+    "_id" | "email" | "verified" | "role" | "createdAt" | "updatedAt" | "__v"
   >;
 }
 
@@ -18,6 +19,11 @@ const userSchema = new mongoose.Schema<UserDocument>(
   {
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    role: {
+      type: String,
+      enum: ["admin", "user", "seller"],
+      default: "user",
+    },
     verified: { type: Boolean, required: true, default: false },
   },
   {
