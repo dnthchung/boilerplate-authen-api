@@ -2,6 +2,7 @@
 
 // 1. Constants
 import { APP_ORIGIN } from "../constants/env";
+import { Role, RoleType } from "../constants/role";
 import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,
@@ -43,7 +44,7 @@ import { sendMail } from "../utils/sendMail";
 type CreateAccountParams = {
   email: string;
   password: string;
-  role: "user" | "seller";
+  role: RoleType;
   userAgent?: string;
 };
 

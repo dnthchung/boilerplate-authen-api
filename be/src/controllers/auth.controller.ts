@@ -23,7 +23,7 @@ import {
   registerSchema,
   resetPasswordSchema,
   verificationCodeSchema,
-} from "./auth.schemas";
+} from "../schemas/auth.schemas";
 
 export const registerHandler = catchErrors(async (req, res) => {
   const request = registerSchema.parse({

@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
+import { Role, RoleType } from "../constants/role";
 import { compareValue, hashValue } from "../utils/bcrypt";
 
 export interface UserDocument extends mongoose.Document {
   email: string;
   password: string;
   verified: boolean;
-  role: "admin" | "user" | "seller";
+  role: RoleType;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(val: string): Promise<boolean>;
@@ -21,8 +22,8 @@ const userSchema = new mongoose.Schema<UserDocument>(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ["admin", "user", "seller"],
-      default: "user",
+      enum: Object.values(Role), // Lấy các giá trị từ Role
+      default: Role.User, // Thiết lập mặc định là Role.User
     },
     verified: { type: Boolean, required: true, default: false },
   },

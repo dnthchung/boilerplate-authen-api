@@ -3,10 +3,10 @@ POST http://localhost:4004/auth/register
 Content-Type: application/json
 
 {
-  "email": "xichung1994@gmail.com",
+  "email": "doanthanhchung03nb@gmail.com",
   "password": "111111",
   "confirmPassword": "111111",
-  "role": "seller"
+  "role": "admin"
 }
 
 
