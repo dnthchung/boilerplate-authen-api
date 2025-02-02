@@ -1,0 +1,31 @@
+### REST CLIENT - extension for Visual Studio Code
+
+### Register - password is required and 6 characters long
+POST http://localhost:4004/auth/register
+Content-Type: application/json
+
+{
+  "email": "doanthanhchung03nb@gmail.com",
+  "password": "111111",
+  "confirmPassword": "111111",
+  "role": "admin"
+}
+
+
+### Login - password is required and 6 characters long
+POST http://localhost:4004/auth/login
+Content-Type: application/json
+
+{
+  "email": "xichung1994@gmail.com",
+  "password": "111111"
+}
+
+
+### access token :
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzk0N2M3NDRlMzVlMDlkNDJlZjA3MTIiLCJpYXQiOjE3Mzg0NzgxMDUsImV4cCI6MTczODQ3ODEzNSwiYXVkIjpbIlVzZXIiXX0.ZXQWBqaUfSOrjBkMGn-VAuE4MU9RsgrcL1ui8pz9a-o
+
+### Get user
+GET http://localhost:4004/user
+Authorization: Bearer {{accessToken}}
+
