@@ -259,16 +259,10 @@ export const loginHandler = catchErrors(async (req, res) => {
   });
   const { accessToken, refreshToken } = await loginUser(request);
 
-  // Log tokens
-  console.log("Login - Access Token:");
-  console.log("Login - Refresh Token:");
-
-  // console.log("Login - Access Token:", accessToken);
-  // console.log("Login - Refresh Token:", refreshToken);
   // set cookies
   return setAuthCookies({ res, accessToken, refreshToken })
     .status(OK)
-    .json({ message: "Login successful" });
+    .json({ message: "Login successful", accessToken: accessToken });
 });
 
 export const logoutHandler = catchErrors(async (req, res) => {
