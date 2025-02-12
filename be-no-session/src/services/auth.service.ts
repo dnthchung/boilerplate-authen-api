@@ -2,7 +2,8 @@
 // ==================== Imports ====================
 
 // 1. Constants
-import { APP_ORIGIN } from "../constants/env";
+// Import APP_ORIGINS thay vì APP_ORIGIN
+import { APP_ORIGINS } from "../constants/env";
 import { Role, RoleType } from "../constants/role";
 import {
   CONFLICT,
@@ -51,6 +52,9 @@ type ResetPasswordParams = {
 };
 
 // ==================== Functions ====================
+
+// Lấy origin đầu tiên trong danh sách (hoặc bạn có thể chọn logic phù hợp)
+const APP_ORIGIN = APP_ORIGINS[0] || "http://localhost:5173";
 
 /**
  * Tạo tài khoản người dùng mới, gửi email xác thực và trả về token.
