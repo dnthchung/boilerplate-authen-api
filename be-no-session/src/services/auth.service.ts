@@ -58,7 +58,12 @@ type ResetPasswordParams = {
 export const createAccount = async (data: CreateAccountParams) => {
   // Kiểm tra email đã tồn tại hay chưa
   const existingUser = await UserModel.exists({ email: data.email });
-  appAssert(!existingUser, CONFLICT, "Email already in use");
+  appAssert(
+    !existingUser,
+    CONFLICT,
+    "Email already in use",
+    generateErrorCode("EmailInUse")
+  );
 
   // Tạo user
   const user = await UserModel.create({
@@ -106,7 +111,12 @@ export const loginUser = async ({ email, password }: LoginParams) => {
   );
 
   const isValid = await user.comparePassword(password);
-  appAssert(isValid, UNAUTHORIZED, "Invalid password", "InvalidPassword");
+  appAssert(
+    isValid,
+    UNAUTHORIZED,
+    "Invalid password",
+    generateErrorCode("InvalidPassword")
+  );
 
   // Tạo token trực tiếp dựa trên user, không tạo session
   const refreshToken = signToken({ userId: user._id }, refreshTokenSignOptions);
@@ -151,10 +161,20 @@ export const refreshUserAccessToken = async (refreshToken: string) => {
   const { payload } = verifyToken(refreshToken, {
     secret: refreshTokenSignOptions.secret,
   });
-  appAssert(payload && payload.userId, UNAUTHORIZED, "Invalid refresh token");
+  appAssert(
+    payload && payload.userId,
+    UNAUTHORIZED,
+    "Invalid refresh token",
+    generateErrorCode("InvalidRefreshToken")
+  );
 
   const user = await UserModel.findById(payload.userId);
-  appAssert(user, UNAUTHORIZED, "User not found");
+  appAssert(
+    user,
+    UNAUTHORIZED,
+    "User not found",
+    generateErrorCode("UserNotFound")
+  );
 
   // Tạo access token mới và cấp refresh token mới
   const accessToken = signToken({ userId: user._id });

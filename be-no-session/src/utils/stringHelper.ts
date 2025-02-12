@@ -15,3 +15,14 @@ export function generateErrorCode(input: string): string {
 
   return result;
 }
+
+// // path: be-no-session/src/utils/stringHelper.ts
+
+// /**
+//  * Chuyển một chuỗi camelCase hoặc PascalCase thành dạng UPPER_CASE_SNAKE.
+//  * Nếu không có input, trả về chuỗi rỗng.
+//  */
+// export const generateErrorCode = (input: string): string => {
+//   if (!input) return "";
+//   return input.replace(/(?!^)([A-Z])/g, "_$1").toUpperCase();
+// };
