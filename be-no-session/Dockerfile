@@ -1,26 +1,27 @@
-# Use official Node.js image
-FROM node:18
+# Sử dụng image Node.js chính thức
+FROM node:18-alpine
 
-# Set working directory inside the container
+# Thiết lập thư mục làm việc
 WORKDIR /app
 
-# Copy package.json and package-lock.json first
+# Copy package.json và package-lock.json
 COPY package.json package-lock.json ./
 
-# Install dependencies
+# Cài đặt dependencies
 RUN npm install
 
-# Copy the rest of the application files
+# Copy toàn bộ mã nguồn
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 3000
-
-# Set environment variables (optional)
+# Thiết lập biến môi trường
 ENV NODE_ENV=production
+ENV PORT=4004
 
-# Build the app (if necessary)
+# Build TypeScript thành JavaScript
 RUN npm run build
 
-# Start the app
-CMD ["npm", "start"]
+# Mở cổng dịch vụ
+EXPOSE 4004
+
+# Chạy ứng dụng
+CMD ["node", "dist/index.js"]

@@ -1,0 +1,31 @@
+[{
+  "_id": {
+    "$oid": "67947c744e35e09d42ef0712"
+  },
+  "email": "xichung1994@gmail.com",
+  "password": "$2b$10$cpug53Yc2ar98M3wzfmdHu64zcy9RVD896Rg93tW4yhGnSZYCRkjy",
+  "verified": true,
+  "createdAt": {
+    "$date": "2025-01-25T05:53:56.069Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-25T05:55:31.597Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "679844d35b0620f40f06a4a2"
+  },
+  "email": "doanthanhchung03nb@gmail.com",
+  "password": "$2b$10$Yd55FfHoV4L00qfZNx.D1uze9ojGxsCJhiw8Vf1K9Mi6nwSCkXSxW",
+  "role": "admin",
+  "verified": true,
+  "createdAt": {
+    "$date": "2025-01-28T02:45:39.371Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-28T02:54:11.250Z"
+  },
+  "__v": 0
+}]
