@@ -162,6 +162,7 @@ export const verifyEmail = async (code: string) => {
  * Refresh lại access token cho người dùng.
  */
 export const refreshUserAccessToken = async (refreshToken: string) => {
+  console.log("refreshToken lại cho user", refreshToken);
   const { payload } = verifyToken(refreshToken, {
     secret: refreshTokenSignOptions.secret,
   });
