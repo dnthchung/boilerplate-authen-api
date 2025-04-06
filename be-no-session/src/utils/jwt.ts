@@ -95,7 +95,7 @@ const defaults: SignOptions = {
 
 // Thiết lập thời gian hết hạn cho AccessToken (ví dụ 30 giây)
 const accessTokenSignOptions: SignOptionsAndSecret = {
-  expiresIn: "30s",
+  expiresIn: "3000s",
   secret: JWT_SECRET,
 };
 
